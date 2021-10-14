@@ -36,3 +36,40 @@
     transform: rotate(360deg);
   }
 }
+.input-form{
+  padding: 4px;
+  margin: 2px;
+  background-color: aliceblue;
+  border-color: forestgreen;
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 1px;
+  width: fit-content;
+}
+.list-item{
+  display: block;
+  background-color: rgb(165, 212, 84);
+  color: aliceblue;
+  margin: 4px;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.single-number-text{
+  display: inline;
+  background-color: antiquewhite;
+  color: #282c34;
+  aspect-ratio: 1/1;
+  width: 25px;
+  margin-left: 2px;
+  border-radius: 4px;
+}
+.twin-number-text{
+  display: inline;
+  background-color: antiquewhite;
+  color: #282c34;
+  aspect-ratio: 2/1;
+  width: 50px;
+  margin-left: 2px;
+  border-radius: 4px;
+}
