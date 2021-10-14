@@ -14,13 +14,17 @@ interface IRandomItem{
   formattedidnumber:string;
 }
 
-class RandomIDNumber extends React.Component<{},{idcount:number,excepted:number[]}>{
+class RandomIDNumber extends React.Component<{},{idcount:number,excepted1:string,excepted2:string,excepted3:string,excepted4:string,excepted5:string}>{
 
   constructor(props:any){
     super(props);
     this.state = {
       idcount:0,
-      excepted : []
+      excepted1 : '',
+      excepted2 : '',
+      excepted3 : '',
+      excepted4 : '',
+      excepted5 : ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,21 +32,25 @@ class RandomIDNumber extends React.Component<{},{idcount:number,excepted:number[
   }
 
   //Service Operations
-  getRandomIDNumber(count:number): Promise<IRandomIDHeader>{
+  getRandomIDNumber(count:number,except:string): Promise<IRandomIDHeader>{
     let url = 'http://10.138.46.91:5099/api/idnumbers/v1/randomidnumber?count='+count;
+    if(except.length > 0){
+      url += '&exclude='+except;
+    }
     return fetch(url)
       .then(res => res.json())
       .then(res => {
-        this.renderResult(res)
+        this.renderResult(res,url)
         return res as IRandomIDHeader
       })
   }
 
-  renderResult(res:IRandomIDHeader){
+  renderResult(res:IRandomIDHeader,url:string){
   
     let idnumbers = res.idnumberlist
     ReactDOM.render(
       <div id="root">
+        <label>{url}</label>
         <ul>
           {idnumbers.map(
            idnumber => 
@@ -65,7 +73,23 @@ class RandomIDNumber extends React.Component<{},{idcount:number,excepted:number[
 
   handleExceptedChange(event:any){
     var adjustValue = event.target.value;
-    adjustValue = this.validateExcepted(event.target.value);
+    switch(event.target.id){
+      case 'exept_1':
+        this.setState({excepted1:this.validateExcept(adjustValue)})
+        break;
+      case 'exept_2':
+        this.setState({excepted2:this.validateExcept(adjustValue)})
+        break;
+      case 'exept_3':
+        this.setState({excepted3:this.validateExcept(adjustValue)})
+        break;
+      case 'exept_4':
+        this.setState({excepted4:this.validateExcept(adjustValue)})
+        break;
+      case 'exept_5':
+        this.setState({excepted5:this.validateExcept(adjustValue)})
+        break;
+    }
   }
 
   validateCount (count:number):number{
@@ -78,18 +102,29 @@ class RandomIDNumber extends React.Component<{},{idcount:number,excepted:number[
     return(retValue);
   }
 
-  validateExcepted(except:number):number{
-    var retValue = except;
-    if(except < 0){
-      except = 0;
-    }else if(except > 9){
-      except = 9;
+  validateExcept(except:string):string{
+    var retString = '';
+    const regx = /^[0-9\b]+$/;
+    if(except === '' || regx.test(except)){
+      if(String.length > 1){
+        retString = '';
+      }else{
+        retString = except;
+      }
     }
-    return retValue;
+    return retString;
   }
 
   handleSubmit(event:any) {
-    alert('You will Generate IDs for : ' + this.state.idcount);
+    //alert('You will Generate IDs for : ' + this.state.idcount);
+    var exclude = '';
+    if(this.state.excepted1 != '') exclude+= this.state.excepted1;
+    if(this.state.excepted2 != '') exclude+= this.state.excepted2;
+    if(this.state.excepted3 != '') exclude+= this.state.excepted3;
+    if(this.state.excepted4 != '') exclude+= this.state.excepted4;
+    if(this.state.excepted5 != '') exclude+= this.state.excepted5;
+    
+    this.getRandomIDNumber(this.state.idcount,exclude);
     event.preventDefault();
   }
   //Presenter
@@ -102,11 +137,11 @@ class RandomIDNumber extends React.Component<{},{idcount:number,excepted:number[
             ระบุจำนวนหมายเลขบัตรประชาชน ที่ต้องการ <br/>
             จำนวน <input id="id_count" type="number" className="twin-number-text" value={this.state.idcount} onChange={this.handleChange} min={0} max={50}/><br/>
             หมายเลขที่ไม่ต้องการ 
-            <input id="exept_1" type="number" className="single-number-text" value={this.state.excepted[0]} onChange={this.handleExceptedChange} min={0} max={9} maxLength={1}/>
-            <input id="exept_2" type="number" className="single-number-text" value={this.state.excepted[1]} onChange={this.handleExceptedChange} min={0} max={9} maxLength={1}/>
-            <input id="exept_3" type="number" className="single-number-text" value={this.state.excepted[2]} onChange={this.handleExceptedChange} min={0} max={9} maxLength={1}/>
-            <input id="exept_4" type="number" className="single-number-text" value={this.state.excepted[3]} onChange={this.handleExceptedChange} min={0} max={9} maxLength={1}/>
-            <input id="exept_5" type="number" className="single-number-text" value={this.state.excepted[4]} onChange={this.handleExceptedChange} min={0} max={9} maxLength={1}/>
+            <input id="exept_1" type="number" className="single-number-text" value={this.state.excepted1} onChange={this.handleExceptedChange} min={0} max={9} maxLength={1}/>
+            <input id="exept_2" type="number" className="single-number-text" value={this.state.excepted2} onChange={this.handleExceptedChange} min={0} max={9} maxLength={1}/>
+            <input id="exept_3" type="number" className="single-number-text" value={this.state.excepted3} onChange={this.handleExceptedChange} min={0} max={9} maxLength={1}/>
+            <input id="exept_4" type="number" className="single-number-text" value={this.state.excepted4} onChange={this.handleExceptedChange} min={0} max={9} maxLength={1}/>
+            <input id="exept_5" type="number" className="single-number-text" value={this.state.excepted5} onChange={this.handleExceptedChange} min={0} max={9} maxLength={1}/>
           </label>
           <br/>
           <button type="submit" >สร้างเลขบัตรประชาชน</button>
