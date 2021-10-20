@@ -41,80 +41,83 @@ interface IValidIDCard{
   isValid:boolean
 }
 
-class RandomIDNumber extends React.Component<{},{idcount:number,
-  exclude1:number,exclude2:number,exclude3:number,exclude4:number,exclude5:number,
-  idn1:number,idn2:number,idn3:number,idn4:number,idn5:number,idn6:number,idn7:number,idn8:number,idn9:number,idn10:number,idn11:number,idn12:number,idn13:number}>{
+class RandomIDNumber extends React.Component<{},{idcount:string,
+  exclude1:string,exclude2:string,exclude3:string,exclude4:string,exclude5:string,
+  idn1:string,idn2:string,idn3:string,idn4:string,idn5:string,idn6:string,idn7:string,idn8:string,idn9:string,idn10:string,idn11:string,idn12:string,idn13:string,urlProcess:string}>{
 
   constructor(props:any){
     super(props);
     this.state = {
-      idcount:0,
-      exclude1 : 0,
-      exclude2 : 0,
-      exclude3 : 0,
-      exclude4 : 0,
-      exclude5 : 0,
-      idn1:0,
-      idn2:0,
-      idn3:0,
-      idn4:0,
-      idn5:0,
-      idn6:0,
-      idn7:0,
-      idn8:0,
-      idn9:0,
-      idn10:0,
-      idn11:0,
-      idn12:0,
-      idn13:0
+      idcount:'',
+      exclude1 : '',
+      exclude2 : '',
+      exclude3 : '',
+      exclude4 : '',
+      exclude5 : '',
+      idn1:'',
+      idn2:'',
+      idn3:'',
+      idn4:'',
+      idn5:'',
+      idn6:'',
+      idn7:'',
+      idn8:'',
+      idn9:'',
+      idn10:'',
+      idn11:'',
+      idn12:'',
+      idn13:'',
+      urlProcess:''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   //Service Operations
-  getRandomIDNumber(count:number,except:string): Promise<IRandomIDHeader>{
+  getRandomIDNumber(count:string,except:string): Promise<IRandomIDHeader>{
     let url = 'http://10.138.46.91:5099/api/idnumbers/v1/randomidnumber?count='+count;
     if(except.length > 0){
       url += '&exclude='+except;
     }
+
+    this.setState({urlProcess:url});
     return fetch(url)
       .then(res => res.json())
       .then(res => {
-       // this.renderResult(res,url)
+        this.renderRandomIDNumber(res);
         return res as IRandomIDHeader;
       })
   }
 
   getIDNumberGenerator(idCardRequest:string):Promise<IIDCardNumber>{
     let url = 'http://10.138.46.91:5099/api/idnumbers/v1/idnumbergenerator/'+idCardRequest;
-    
+    this.setState({urlProcess:url});
     return fetch(url)
       .then(res => res.json())
       .then(res => {
-        //this.renderResult(res,url)
+        this.renderIDCardGenerator(res);
         return res as IIDCardNumber;
       })
   }
 
   getLastDigit(idCardRequest:string):Promise<ILastDigit>{
     let url = 'http://10.138.46.91:5099/api/idnumbers/v1/getlastdigit/'+idCardRequest;
-    
+    this.setState({urlProcess:url});
     return fetch(url)
       .then(res => res.json())
       .then(res => {
-        //this.renderResult(res,url)
+        this.renderLastDigit(res);
         return res as ILastDigit;
       })
   }
 
   getValidIDCard(idCardRequest:string):Promise<IValidIDCard>{
     let url = 'http://10.138.46.91:5099/api/idnumbers/v1/isvalid/'+idCardRequest;
-    
+    this.setState({urlProcess:url});
     return fetch(url)
       .then(res => res.json())
       .then(res => {
-        this.renderRandomIDNumber(res)
+        this.renderValidIDNumber(res);
         return res as IValidIDCard;
       })
   }
@@ -125,10 +128,11 @@ class RandomIDNumber extends React.Component<{},{idcount:number,
     let idnumbers = res.idnumberlist
     ReactDOM.render(
       <div id="root">
-        
+        {this.state.urlProcess}<br/>
         <ul>
           {idnumbers.map(
            idnumber => 
+           
             <li>
               <div className="list-item">
               {idnumber.idnumber}<br/>
@@ -141,65 +145,99 @@ class RandomIDNumber extends React.Component<{},{idcount:number,
       ,document.getElementById('root'));
   }
 
+  renderIDCardGenerator(res:IIDCardNumber){
+    ReactDOM.render(
+      <div id="root">
+        {this.state.urlProcess}<br/>
+        {res.formattedidnumber}
+      </div>
+      ,document.getElementById('root'));
+  }
+
+  renderValidIDNumber(res:IValidIDCard){
+    let isValid = '';
+    if(res.isValid){
+      isValid = 'หมายเลขประชาชนถูกต้อง';
+    }else{
+      isValid = 'หมายเลขประชาชนไม่ถูกต้อง';
+    }
+    ReactDOM.render(
+      <div id="root">
+        {this.state.urlProcess}<br/>
+        {isValid}
+      </div>
+      ,document.getElementById('root'));
+  }
+
+  renderLastDigit(res:ILastDigit){
+    ReactDOM.render(
+      <div id="root">
+        {this.state.urlProcess}<br/>
+        {res.formattedidnumber}<br/>
+        {res.lastdigit}
+      </div>
+      ,document.getElementById('root'));
+  }
+
   //Events 
   handleChange(event:any) {
     switch(event.target.id){
       case 'id_count':
-        this.setState({idcount:this.validateCount(event.target.value)});
+        this.setState({idcount:this.validateCount(event.target.value).toString()});
         break;
       case 'idn1':
-        this.setState({idn1:this.validateDigits(event.target.value)});
+        this.setState({idn1:this.validateDigits(event.target.value).toString()});
         break;
       case 'idn2':
-        this.setState({idn2:this.validateDigits(event.target.value)});
+        this.setState({idn2:this.validateDigits(event.target.value).toString()});
         break;
       case 'idn3':
-        this.setState({idn3:this.validateDigits(event.target.value)});
+        this.setState({idn3:this.validateDigits(event.target.value).toString()});
         break;
       case 'idn4':
-        this.setState({idn4:this.validateDigits(event.target.value)});
+        this.setState({idn4:this.validateDigits(event.target.value).toString()});
         break;
       case 'idn5':
-        this.setState({idn5:this.validateDigits(event.target.value)});
+        this.setState({idn5:this.validateDigits(event.target.value).toString()});
         break;
       case 'idn6':
-        this.setState({idn6:this.validateDigits(event.target.value)});
+        this.setState({idn6:this.validateDigits(event.target.value).toString()});
         break;
       case 'idn7':
-        this.setState({idn7:this.validateDigits(event.target.value)});
+        this.setState({idn7:this.validateDigits(event.target.value).toString()});
         break;
       case 'idn8':
-        this.setState({idn8:this.validateDigits(event.target.value)});
+        this.setState({idn8:this.validateDigits(event.target.value).toString()});
         break;
       case 'idn9':
-        this.setState({idn9:this.validateDigits(event.target.value)});
+        this.setState({idn9:this.validateDigits(event.target.value).toString()});
         break;
       case 'idn10':
-        this.setState({idn10:this.validateDigits(event.target.value)});
+        this.setState({idn10:this.validateDigits(event.target.value).toString()});
         break;
       case 'idn11':
-        this.setState({idn11:this.validateDigits(event.target.value)});
+        this.setState({idn11:this.validateDigits(event.target.value).toString()});
         break;
       case 'idn12':
-        this.setState({idn12:this.validateDigits(event.target.value)});
+        this.setState({idn12:this.validateDigits(event.target.value).toString()});
         break;
       case 'idn13':
-        this.setState({idn13:this.validateDigits(event.target.value)});
+        this.setState({idn13:this.validateDigits(event.target.value).toString()});
         break;
       case 'exclude1':
-        this.setState({exclude1:this.validateDigits(event.target.value)});
+        this.setState({exclude1:this.validateDigits(event.target.value).toString()});
         break;
       case 'exclude2':
-        this.setState({exclude2:this.validateDigits(event.target.value)});
+        this.setState({exclude2:this.validateDigits(event.target.value).toString()});
         break;
       case 'exclude3':
-        this.setState({exclude3:this.validateDigits(event.target.value)});
+        this.setState({exclude3:this.validateDigits(event.target.value).toString()});
         break;
       case 'exclude4':
-        this.setState({exclude4:this.validateDigits(event.target.value)});
+        this.setState({exclude4:this.validateDigits(event.target.value).toString()});
         break;
       case 'exclude5':
-        this.setState({exclude5:this.validateDigits(event.target.value)});
+        this.setState({exclude5:this.validateDigits(event.target.value).toString()});
         break;
       default:break;
 
@@ -225,8 +263,32 @@ class RandomIDNumber extends React.Component<{},{idcount:number,
 
   handleSubmit(event:any) {
     //alert('You will Generate IDs for : ' + this.state.idcount);
-    var exclude = this.makeExclude();
-    this.getRandomIDNumber(this.state.idcount,exclude);
+    //var exclude = this.makeExclude();
+    //this.getRandomIDNumber(this.state.idcount,exclude);
+    let idRequest = this.makeIDRequest();
+    let digitCount = this.idNumberDigitCount();
+    let missingLast = this.isMissingLastDigit();
+    let count = this.state.idcount;
+    let excludes = this.makeExclude();
+
+    if(digitCount > 0){
+      if(digitCount < 13){
+        if(this.isMissingLastDigit()){
+          alert('Select Get Last Digit');
+          this.getLastDigit(this.makeIDLastDigitRequest(idRequest));
+        }else{
+          alert('Select ID Number Generator');
+          this.getIDNumberGenerator(idRequest);
+        }
+      }else{
+        alert('Select Vilide ID Card');
+        this.getValidIDCard(idRequest);
+      }
+    }else{
+      alert('Select Random ID Number');
+      this.getRandomIDNumber(count,excludes);
+    }
+
     event.preventDefault();
   }
   //Input Analyst
@@ -250,7 +312,7 @@ class RandomIDNumber extends React.Component<{},{idcount:number,
   }
 
   isMissingLastDigit():boolean{
-    if(this.state.idn13.toString() != ''){
+    if(this.state.idn13.toString() == ''){
       return true;
     }else{
       return false;
@@ -270,21 +332,26 @@ class RandomIDNumber extends React.Component<{},{idcount:number,
   makeIDRequest():string{
     var requestID = '';
 
-    if(this.state.idn1.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn1.toString()}
-    if(this.state.idn2.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn2.toString()}
-    if(this.state.idn3.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn3.toString()}
-    if(this.state.idn4.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn4.toString()}
-    if(this.state.idn5.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn5.toString()}
-    if(this.state.idn6.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn6.toString()}
-    if(this.state.idn7.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn7.toString()}
-    if(this.state.idn8.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn8.toString()}
-    if(this.state.idn9.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn9.toString()}
-    if(this.state.idn10.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn10.toString()}
-    if(this.state.idn11.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn11.toString()}
-    if(this.state.idn12.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn12.toString()}
-    if(this.state.idn13.toString() != ''){ requestID += '_'; } else {requestID += this.state.idn13.toString()}
+    if(this.state.idn1.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn1.toString()}
+    if(this.state.idn2.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn2.toString()}
+    if(this.state.idn3.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn3.toString()}
+    if(this.state.idn4.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn4.toString()}
+    if(this.state.idn5.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn5.toString()}
+    if(this.state.idn6.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn6.toString()}
+    if(this.state.idn7.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn7.toString()}
+    if(this.state.idn8.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn8.toString()}
+    if(this.state.idn9.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn9.toString()}
+    if(this.state.idn10.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn10.toString()}
+    if(this.state.idn11.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn11.toString()}
+    if(this.state.idn12.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn12.toString()}
+    if(this.state.idn13.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn13.toString()}
 
     return requestID;
+  }
+  makeIDLastDigitRequest(input:String):string{
+    var retString = '';
+    retString = input.replace('_','');
+    return retString;
   }
   //Presenter
   render(){
