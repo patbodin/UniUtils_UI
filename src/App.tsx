@@ -5,7 +5,7 @@ import RandomIDNumber from './components/RandomIDNumber/RandomIDNumber';
 import Login from './components/Login/Login';
 function App() {
   return (
-    <RandomIDNumber/>
+    <Login/>
   );
 }
 
