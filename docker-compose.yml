@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  react:
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile
+    image: uniutil_fe:1.0
+    container_name: uniutil_fe
+    restart: always
+    # env_file: .env
+    # environment:
+    #   - MONGO_USERNAME=$MONGO_USERNAME
+    #   - MONGO_PASSWORD=$MONGO_PASSWORD
+    #   - MONGO_HOSTNAME=db
+    #   - MONGO_PORT=$MONGO_PORT
+    #   - MONGO_DB=$MONGO_DB
+    ports:
+      - "3099:3000"
+    # networks:
+    #   - app-network
+    command: npm start
