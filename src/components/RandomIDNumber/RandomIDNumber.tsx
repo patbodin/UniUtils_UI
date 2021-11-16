@@ -1,5 +1,8 @@
+import { ClientRequest } from 'http';
 import React, { useDebugValue, useState } from 'react';
 import ReactDOM from 'react-dom';
+import RandomIDNumberList from '../RandomIDNumberList/RandomIDNumberList';
+import IDNumberGenerator from '../IDNumberGenerator/IDNumberGenerator';
 
 interface IRandomIDHeader{
   result:string;
@@ -43,7 +46,9 @@ interface IValidIDCard{
 
 class RandomIDNumber extends React.Component<{},{idcount:string,
   exclude1:string,exclude2:string,exclude3:string,exclude4:string,exclude5:string,
-  idn1:string,idn2:string,idn3:string,idn4:string,idn5:string,idn6:string,idn7:string,idn8:string,idn9:string,idn10:string,idn11:string,idn12:string,idn13:string,urlProcess:string}>{
+  idn1:string,idn2:string,idn3:string,idn4:string,idn5:string,idn6:string,idn7:string,
+  idn8:string,idn9:string,idn10:string,idn11:string,idn12:string,idn13:string,
+  urlProcess:string,loading:boolean}>{
 
   constructor(props:any){
     super(props);
@@ -67,38 +72,14 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
       idn11:'',
       idn12:'',
       idn13:'',
-      urlProcess:''
+      urlProcess:'',
+      loading:true
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   //Service Operations
-  getRandomIDNumber(count:string,except:string): Promise<IRandomIDHeader>{
-    let url = 'http://10.138.46.91:5099/api/idnumbers/v1/randomidnumber?count='+count;
-    if(except.length > 0){
-      url += '&exclude='+except;
-    }
-
-    this.setState({urlProcess:url});
-    return fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.renderRandomIDNumber(res);
-        return res as IRandomIDHeader;
-      })
-  }
-
-  getIDNumberGenerator(idCardRequest:string):Promise<IIDCardNumber>{
-    let url = 'http://10.138.46.91:5099/api/idnumbers/v1/idnumbergenerator/'+idCardRequest;
-    this.setState({urlProcess:url});
-    return fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.renderIDCardGenerator(res);
-        return res as IIDCardNumber;
-      })
-  }
 
   getLastDigit(idCardRequest:string):Promise<ILastDigit>{
     let url = 'http://10.138.46.91:5099/api/idnumbers/v1/getlastdigit/'+idCardRequest;
@@ -123,34 +104,15 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
   }
 
   //Renders
-  renderRandomIDNumber(res:IRandomIDHeader){
-  
-    let idnumbers = res.idnumberlist
+  renderRandomIDNumber(){
     ReactDOM.render(
-      <div id="root">
-        {this.state.urlProcess}<br/>
-        <ul>
-          {idnumbers.map(
-           idnumber => 
-           
-            <li>
-              <div className="list-item">
-              {idnumber.idnumber}<br/>
-               {idnumber.formattedidnumber}
-              </div>
-            </li>
-          )}
-        </ul>
-      </div>
+      <RandomIDNumberList count={parseInt( this.state.idcount)} except={this.makeExclude()} />
       ,document.getElementById('root'));
   }
 
-  renderIDCardGenerator(res:IIDCardNumber){
+  renderIDCardGenerator(){
     ReactDOM.render(
-      <div id="root">
-        {this.state.urlProcess}<br/>
-        {res.formattedidnumber}
-      </div>
+      <IDNumberGenerator request={this.makeIDRequest()}/>
       ,document.getElementById('root'));
   }
 
@@ -177,6 +139,16 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
         {res.lastdigit}
       </div>
       ,document.getElementById('root'));
+  }
+
+  async getLayoutData(){
+    /* With Timeout */
+    return await setTimeout(async () => {
+    this.setState({loading:false})
+    }, 3000) 
+  }
+  componentDidMount(){
+    this.getLayoutData();
   }
 
   //Events 
@@ -278,7 +250,8 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
           this.getLastDigit(this.makeIDLastDigitRequest(idRequest));
         }else{
           alert('Select ID Number Generator');
-          this.getIDNumberGenerator(idRequest);
+          //this.getIDNumberGenerator(idRequest);
+          this.renderIDCardGenerator();
         }
       }else{
         alert('Select Vilide ID Card');
@@ -286,7 +259,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
       }
     }else{
       alert('Select Random ID Number');
-      this.getRandomIDNumber(count,excludes);
+      this.renderRandomIDNumber();
     }
 
     event.preventDefault();
@@ -355,6 +328,38 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
   }
   //Presenter
   render(){
+    if(this.state.loading){
+      return(
+      <div id="root">
+        <div>
+            <div className="label-skeleton animated-background"/><br/>
+            <div className="label-skeleton animated-background"/><div className="label-skeleton animated-background"/>           
+            <div className="label-skeleton animated-background"/><br/>
+            <div className="input-skeleton-single-number animated-background"/>-
+            <div className="input-skeleton-single-number animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>-
+            <div className="input-skeleton-single-number animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>-
+            <div className="input-skeleton-single-number animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>-
+            <div className="input-skeleton-single-number animated-background"/>
+            <br/>
+            <div className="label-skeleton animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>
+            <div className="input-skeleton-single-number animated-background"/>
+          <br/>
+          <div className="label-skeleton animated-background"/>
+        </div>
+      </div>)
+    }
     return(
       <div id="root">
       <form onSubmit={this.handleSubmit}>

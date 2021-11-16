@@ -1,0 +1,25 @@
+{
+    "result": "Success",
+    "resultCode": "CTWS000",
+    "resultMessage": "Process successful",
+    "id": "f466c8f3-f209-4056-95db-1d7e5c109e19",
+    "username": "admin",
+    "isAdmin": true,
+    "datetime": "2021/11/02 04:49:02.884",
+    "timestamp": 1635828542884,
+    "apps":[
+        {
+        "name":"บัตรประชาชน",
+        "description":"การจัดการบัตรประชาน สร้างเลขบัตรไว้ใช้งานหรือตรวจสอบความถูกต้องต่างๆ ของบัตรประชาชน",
+        "icon":"/images/icon_idcard.png",
+        "appid":"RandomIDNumber"
+        },
+        {
+            "name":"Future App",
+            "description":"จัดการเบอร์โทรศัพท์",
+            "icon":"/images/iconblank.png",
+            "appid":"Future"
+        }
+        
+    ]
+}
