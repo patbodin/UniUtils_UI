@@ -1,8 +1,8 @@
-import { ClientRequest } from 'http';
-import React, { useDebugValue, useState } from 'react';
+import React, {  } from 'react';
 import ReactDOM from 'react-dom';
 import RandomIDNumberList from '../RandomIDNumberList/RandomIDNumberList';
 import IDNumberGenerator from '../IDNumberGenerator/IDNumberGenerator';
+import Modal from "react-modal";
 
 interface IRandomIDHeader{
   result:string;
@@ -48,7 +48,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
   exclude1:string,exclude2:string,exclude3:string,exclude4:string,exclude5:string,
   idn1:string,idn2:string,idn3:string,idn4:string,idn5:string,idn6:string,idn7:string,
   idn8:string,idn9:string,idn10:string,idn11:string,idn12:string,idn13:string,
-  urlProcess:string,loading:boolean}>{
+  urlProcess:string,loading:boolean,modalShow:boolean,modalTitle:string,modalMessage:string}>{
 
   constructor(props:any){
     super(props);
@@ -73,7 +73,10 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
       idn12:'',
       idn13:'',
       urlProcess:'',
-      loading:true
+      loading:true,
+      modalShow:false,
+      modalTitle:'',
+      modalMessage:''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -98,7 +101,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
     return fetch(url)
       .then(res => res.json())
       .then(res => {
-        this.renderValidIDNumber(res);
+        this.renderValidIDNumber(this.props,res);
         return res as IValidIDCard;
       })
   }
@@ -116,19 +119,15 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
       ,document.getElementById('root'));
   }
 
-  renderValidIDNumber(res:IValidIDCard){
+  renderValidIDNumber(props:any,res:IValidIDCard){
     let isValid = '';
     if(res.isValid){
       isValid = 'หมายเลขประชาชนถูกต้อง';
     }else{
       isValid = 'หมายเลขประชาชนไม่ถูกต้อง';
     }
-    ReactDOM.render(
-      <div id="root">
-        {this.state.urlProcess}<br/>
-        {isValid}
-      </div>
-      ,document.getElementById('root'));
+    this.setState({modalShow:true,modalTitle:"ตรวจสอบหมายเลขบัตรประชาชน",modalMessage:isValid});
+    
   }
 
   renderLastDigit(res:ILastDigit){
@@ -138,6 +137,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
         {res.formattedidnumber}<br/>
         {res.lastdigit}
       </div>
+      
       ,document.getElementById('root'));
   }
 
@@ -145,7 +145,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
     /* With Timeout */
     return await setTimeout(async () => {
     this.setState({loading:false})
-    }, 3000) 
+    }, 1000) 
   }
   componentDidMount(){
     this.getLayoutData();
@@ -216,6 +216,8 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
     }
   }
 
+  
+
   validateCount (count:number):number{
     var retValue = count;
     if(count < 0){ 
@@ -254,7 +256,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
           this.renderIDCardGenerator();
         }
       }else{
-        alert('Select Vilide ID Card');
+        //alert('Select Vilide ID Card');
         this.getValidIDCard(idRequest);
       }
     }else{
@@ -326,6 +328,11 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
     retString = input.replace('_','');
     return retString;
   }
+  showModal = (e:any) => {
+    this.setState({
+      modalShow:!this.state.modalShow
+    });
+  };
   //Presenter
   render(){
     if(this.state.loading){
@@ -335,18 +342,18 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
             <div className="label-skeleton animated-background"/><br/>
             <div className="label-skeleton animated-background"/><div className="label-skeleton animated-background"/>           
             <div className="label-skeleton animated-background"/><br/>
-            <div className="input-skeleton-single-number animated-background"/>-
+            <div className="input-skeleton-single-number animated-background"/> 
             <div className="input-skeleton-single-number animated-background"/>
             <div className="input-skeleton-single-number animated-background"/>
             <div className="input-skeleton-single-number animated-background"/>
-            <div className="input-skeleton-single-number animated-background"/>-
+            <div className="input-skeleton-single-number animated-background"/> 
             <div className="input-skeleton-single-number animated-background"/>
             <div className="input-skeleton-single-number animated-background"/>
             <div className="input-skeleton-single-number animated-background"/>
             <div className="input-skeleton-single-number animated-background"/>
-            <div className="input-skeleton-single-number animated-background"/>-
+            <div className="input-skeleton-single-number animated-background"/> 
             <div className="input-skeleton-single-number animated-background"/>
-            <div className="input-skeleton-single-number animated-background"/>-
+            <div className="input-skeleton-single-number animated-background"/> 
             <div className="input-skeleton-single-number animated-background"/>
             <br/>
             <div className="label-skeleton animated-background"/>
@@ -393,6 +400,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
           <button type="submit" >สร้างเลขบัตรประชาชน</button>
         </div>
       </form>
+     
     </div>
     );
   }
