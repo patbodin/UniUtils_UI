@@ -1,8 +1,11 @@
-import React, {  } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import RandomIDNumberList from '../RandomIDNumberList/RandomIDNumberList';
 import IDNumberGenerator from '../IDNumberGenerator/IDNumberGenerator';
 import Modal from "react-modal";
+import { throws } from 'assert';
+
+Modal.setAppElement("#root");
 
 interface IRandomIDHeader{
   result:string;
@@ -49,6 +52,8 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
   idn1:string,idn2:string,idn3:string,idn4:string,idn5:string,idn6:string,idn7:string,
   idn8:string,idn9:string,idn10:string,idn11:string,idn12:string,idn13:string,
   urlProcess:string,loading:boolean,modalShow:boolean,modalTitle:string,modalMessage:string}>{
+
+  
 
   constructor(props:any){
     super(props);
@@ -127,7 +132,6 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
       isValid = 'หมายเลขประชาชนไม่ถูกต้อง';
     }
     this.setState({modalShow:true,modalTitle:"ตรวจสอบหมายเลขบัตรประชาชน",modalMessage:isValid});
-    
   }
 
   renderLastDigit(res:ILastDigit){
@@ -333,12 +337,15 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
       modalShow:!this.state.modalShow
     });
   };
+  closeModal(){
+    this.setState({modalShow:false});
+  }
   //Presenter
   render(){
     if(this.state.loading){
       return(
       <div id="root">
-        <div>
+        <div className="center-screen padding-content background-light round-border drop-shadow">
             <div className="label-skeleton animated-background"/><br/>
             <div className="label-skeleton animated-background"/><div className="label-skeleton animated-background"/>           
             <div className="label-skeleton animated-background"/><br/>
@@ -369,38 +376,46 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
     }
     return(
       <div id="root">
-      <form onSubmit={this.handleSubmit}>
-        <div className="input-form">
-          <label>
-            ระบุจำนวนหมายเลขบัตรประชาชน ที่ต้องการ <br/>
-            จำนวน <input id="id_count" type="number" className="twin-number-text" value={this.state.idcount} onChange={this.handleChange} min={0} max={50}/><br/>
-            รูปแบบที่ต้องการ<br/>
-            <input id="idn1" type="number" maxLength={1} className="single-number-text" value={this.state.idn1} onChange={this.handleChange}/> - 
-            <input id="idn2" type="number" maxLength={1} className="single-number-text" value={this.state.idn2} onChange={this.handleChange}/>
-            <input id="idn3" type="number" maxLength={1} className="single-number-text" value={this.state.idn3} onChange={this.handleChange}/>
-            <input id="idn4" type="number" maxLength={1} className="single-number-text" value={this.state.idn4} onChange={this.handleChange}/>
-            <input id="idn5" type="number" maxLength={1} className="single-number-text" value={this.state.idn5} onChange={this.handleChange}/> - 
-            <input id="idn6" type="number" maxLength={1} className="single-number-text" value={this.state.idn6} onChange={this.handleChange}/>
-            <input id="idn7" type="number" maxLength={1} className="single-number-text" value={this.state.idn7} onChange={this.handleChange}/>
-            <input id="idn8" type="number" maxLength={1} className="single-number-text" value={this.state.idn8} onChange={this.handleChange}/>
-            <input id="idn9" type="number" maxLength={1} className="single-number-text" value={this.state.idn9} onChange={this.handleChange}/>
-            <input id="idn10" type="number" maxLength={1} className="single-number-text" value={this.state.idn10} onChange={this.handleChange}/> - 
-            <input id="idn11" type="number" maxLength={1} className="single-number-text" value={this.state.idn11} onChange={this.handleChange}/>
-            <input id="idn12" type="number" maxLength={1} className="single-number-text" value={this.state.idn12} onChange={this.handleChange}/> - 
-            <input id="idn13" type="number" maxLength={1} className="single-number-text" value={this.state.idn13} onChange={this.handleChange}/>
+      <form onSubmit={this.handleSubmit} >
+        <div className="center-screen padding-content background-light round-border drop-shadow">
+          <h1>ระบุจำนวนหมายเลขบัตรประชาชน ที่ต้องการ</h1> <br/>
+          
+            <label>จำนวน</label> <input id="id_count" type="number" className="input-multiple-text round-border" value={this.state.idcount} onChange={this.handleChange} min={0} max={50}/> <label>หมายเลข</label><br/>
+            <label>รูปแบบที่ต้องการ</label><br/>
+            <p className="remark">ใส่เลขบัตรประชาชนบางหลักที่ต้องการเพื่อหาเลขบัตรประชาชนตามรูปแบบที่ต้องการ
+          หรือใส่ให้ครบเพื่อตรวจสอบความถูกต้องของบัตรประชาชน</p><br/>
+            <input id="idn1" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn1} onChange={this.handleChange}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="idn2" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn2} onChange={this.handleChange}/>&nbsp;
+            <input id="idn3" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn3} onChange={this.handleChange}/>&nbsp;
+            <input id="idn4" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn4} onChange={this.handleChange}/>&nbsp;
+            <input id="idn5" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn5} onChange={this.handleChange}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="idn6" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn6} onChange={this.handleChange}/>&nbsp;
+            <input id="idn7" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn7} onChange={this.handleChange}/>&nbsp;
+            <input id="idn8" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn8} onChange={this.handleChange}/>&nbsp;
+            <input id="idn9" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn9} onChange={this.handleChange}/>&nbsp;
+            <input id="idn10" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn10} onChange={this.handleChange}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="idn11" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn11} onChange={this.handleChange}/>&nbsp;
+            <input id="idn12" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn12} onChange={this.handleChange}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input id="idn13" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn13} onChange={this.handleChange}/>&nbsp;
             <br/>
-            หมายเลขที่ไม่ต้องการ 
-            <input id="exclude1" type="number" className="single-number-text" value={this.state.exclude1} onChange={this.handleChange} min={0} max={9} maxLength={1}/>
-            <input id="exclude2" type="number" className="single-number-text" value={this.state.exclude2} onChange={this.handleChange} min={0} max={9} maxLength={1}/>
-            <input id="exclude3" type="number" className="single-number-text" value={this.state.exclude3} onChange={this.handleChange} min={0} max={9} maxLength={1}/>
-            <input id="exclude4" type="number" className="single-number-text" value={this.state.exclude4} onChange={this.handleChange} min={0} max={9} maxLength={1}/>
-            <input id="exclude5" type="number" className="single-number-text" value={this.state.exclude5} onChange={this.handleChange} min={0} max={9} maxLength={1}/>
-          </label>
+            <label>หมายเลขที่ไม่ต้องการ</label>&nbsp;
+            <input id="exclude1" type="number" className="input-single-text round-border" value={this.state.exclude1} onChange={this.handleChange} min={0} max={9} maxLength={1}/>&nbsp;
+            <input id="exclude2" type="number" className="input-single-text round-border" value={this.state.exclude2} onChange={this.handleChange} min={0} max={9} maxLength={1}/>&nbsp;
+            <input id="exclude3" type="number" className="input-single-text round-border" value={this.state.exclude3} onChange={this.handleChange} min={0} max={9} maxLength={1}/>&nbsp;
+            <input id="exclude4" type="number" className="input-single-text round-border" value={this.state.exclude4} onChange={this.handleChange} min={0} max={9} maxLength={1}/>&nbsp;
+            <input id="exclude5" type="number" className="input-single-text round-border" value={this.state.exclude5} onChange={this.handleChange} min={0} max={9} maxLength={1}/>
+          
           <br/>
           <button type="submit" >สร้างเลขบัตรประชาชน</button>
         </div>
       </form>
-     
+      <Modal className="modal center-screen"
+        isOpen={this.state.modalShow}
+        onRequestClose={this.showModal}
+        contentLabel={this.state.modalTitle}>
+        <div><h4>{this.state.modalMessage}</h4></div>
+        <button onClick={this.showModal}>Close modal</button>
+      </Modal>
     </div>
     );
   }
