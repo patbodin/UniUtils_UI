@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import RandomIDNumberList from '../RandomIDNumberList/RandomIDNumberList';
 import IDNumberGenerator from '../IDNumberGenerator/IDNumberGenerator';
-import Modal from "react-modal";
+import Modal from 'react-modal';
 import { throws } from 'assert';
 
 Modal.setAppElement("#root");
