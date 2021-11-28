@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM, { render } from 'react-dom';
 import RandomIDNumberList from '../RandomIDNumberList/RandomIDNumberList';
 import IDNumberGenerator from '../IDNumberGenerator/IDNumberGenerator';
-import Modal from 'react-modal';
-import { throws } from 'assert';
-
-Modal.setAppElement("#root");
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 interface IRandomIDHeader{
   result:string;
@@ -51,9 +49,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
   exclude1:string,exclude2:string,exclude3:string,exclude4:string,exclude5:string,
   idn1:string,idn2:string,idn3:string,idn4:string,idn5:string,idn6:string,idn7:string,
   idn8:string,idn9:string,idn10:string,idn11:string,idn12:string,idn13:string,
-  urlProcess:string,loading:boolean,modalShow:boolean,modalTitle:string,modalMessage:string}>{
-
-  
+  urlProcess:string,loading:boolean,show:boolean,modalTitle:string,modalMessage:string}>{
 
   constructor(props:any){
     super(props);
@@ -79,12 +75,15 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
       idn13:'',
       urlProcess:'',
       loading:true,
-      modalShow:false,
-      modalTitle:'',
-      modalMessage:''
+      show:false,
+      modalTitle:'Modal Title',
+      modalMessage:'Modal Message let you know, someone show something somewhere in sometime.'
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.showModal = this.showModal.bind(this);
+    this.hideModal = this.hideModal.bind(this);
+
   }
 
   //Service Operations
@@ -131,18 +130,49 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
     }else{
       isValid = 'หมายเลขประชาชนไม่ถูกต้อง';
     }
-    this.setState({modalShow:true,modalTitle:"ตรวจสอบหมายเลขบัตรประชาชน",modalMessage:isValid});
+    this.displayAlert('ตรวจสอบบัตรประชาชน',isValid);
   }
 
+  displayAlert(topic:string, detail:string){
+    confirmAlert({
+      title: topic,
+      message: detail,
+      buttons: [
+        {
+          label: 'ปิด',
+          onClick: () => {}//alert('Click Yes')
+        }
+      ]
+    });
+  }
+
+  submit = () => {
+    confirmAlert({
+      title: 'Confirm to submit',
+      message: 'Are you sure to do this.',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => alert('Click Yes')
+        },
+        {
+          label: 'No',
+          onClick: () => alert('Click No')
+        }
+      ]
+    });
+  };
+
+  showModal = () => {
+    this.setState({ show: true });
+  };
+
+  hideModal = () => {
+    this.setState({ show: false });
+  };
+
   renderLastDigit(res:ILastDigit){
-    ReactDOM.render(
-      <div id="root">
-        {this.state.urlProcess}<br/>
-        {res.formattedidnumber}<br/>
-        {res.lastdigit}
-      </div>
-      
-      ,document.getElementById('root'));
+    this.displayAlert('เลขท้ายที่ออก',res.lastdigit);
   }
 
   async getLayoutData(){
@@ -332,14 +362,6 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
     retString = input.replace('_','');
     return retString;
   }
-  showModal = (e:any) => {
-    this.setState({
-      modalShow:!this.state.modalShow
-    });
-  };
-  closeModal(){
-    this.setState({modalShow:false});
-  }
   //Presenter
   render(){
     if(this.state.loading){
@@ -408,14 +430,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
           <br/>
           <button type="submit" >สร้างเลขบัตรประชาชน</button>
         </div>
-      </form>
-      <Modal className="modal center-screen"
-        isOpen={this.state.modalShow}
-        onRequestClose={this.showModal}
-        contentLabel={this.state.modalTitle}>
-        <div><h4>{this.state.modalMessage}</h4></div>
-        <button onClick={this.showModal}>Close modal</button>
-      </Modal>
+      </form>    
     </div>
     );
   }
