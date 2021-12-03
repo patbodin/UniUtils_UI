@@ -384,3 +384,7 @@ button{
 .display-none {
   display: none;
 }
+
+.center-horizontal{
+  text-align: center; 
+}

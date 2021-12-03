@@ -4,6 +4,7 @@ import RandomIDNumberList from '../RandomIDNumberList/RandomIDNumberList';
 import IDNumberGenerator from '../IDNumberGenerator/IDNumberGenerator';
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import IdCardRequestInput from '../IdCardRequestInput/IdCardRequestInput';
 
 interface IRandomIDHeader{
   result:string;
@@ -49,7 +50,8 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
   exclude1:string,exclude2:string,exclude3:string,exclude4:string,exclude5:string,
   idn1:string,idn2:string,idn3:string,idn4:string,idn5:string,idn6:string,idn7:string,
   idn8:string,idn9:string,idn10:string,idn11:string,idn12:string,idn13:string,
-  urlProcess:string,loading:boolean,show:boolean,modalTitle:string,modalMessage:string}>{
+  urlProcess:string,loading:boolean,show:boolean,modalTitle:string,modalMessage:string
+  componentList?: IdCardRequestInput[],multipleRequest:boolean,numComponents:number}>{
 
   constructor(props:any){
     super(props);
@@ -77,13 +79,16 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
       loading:true,
       show:false,
       modalTitle:'Modal Title',
-      modalMessage:'Modal Message let you know, someone show something somewhere in sometime.'
+      modalMessage:'Modal Message let you know, someone show something somewhere in sometime.',
+      componentList:[],
+      multipleRequest:true,
+      numComponents:0
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
-
+    this.onAddClick = this.onAddClick.bind(this);
   }
 
   //Service Operations
@@ -246,11 +251,19 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
         this.setState({exclude5:this.validateDigits(event.target.value).toString()});
         break;
       default:break;
-
     }
   }
 
-  
+  public onAddClick(event:any){
+    this.setState({numComponents: this.state.numComponents + 1});
+  }
+  clickedComponents = () => {
+    let componentArray: any[] = [];
+    for (let i=0; i<this.state.numComponents; i++) {
+        componentArray.push(<IdCardRequestInput />);
+    }
+    return componentArray;
+}
 
   validateCount (count:number):number{
     var retValue = count;
@@ -357,6 +370,15 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
 
     return requestID;
   }
+
+   makeIDRequestMultiple():string{
+     var request = "";
+     for(var comp in this.state.componentList){
+        let inputCom = comp as unknown as IdCardRequestInput;
+        
+     }
+     return request;
+   }
   makeIDLastDigitRequest(input:String):string{
     var retString = '';
     retString = input.replace('_','');
@@ -426,11 +448,19 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
             <input id="exclude3" type="number" className="input-single-text round-border" value={this.state.exclude3} onChange={this.handleChange} min={0} max={9} maxLength={1}/>&nbsp;
             <input id="exclude4" type="number" className="input-single-text round-border" value={this.state.exclude4} onChange={this.handleChange} min={0} max={9} maxLength={1}/>&nbsp;
             <input id="exclude5" type="number" className="input-single-text round-border" value={this.state.exclude5} onChange={this.handleChange} min={0} max={9} maxLength={1}/>
-          
-          <br/>
-          <button type="submit" >สร้างเลขบัตรประชาชน</button>
-        </div>
-      </form>    
+          </div>
+          { this.state.componentList?.map(function(component, index) 
+              {
+                  return IdCardRequestInput
+          })}
+          <div className="center-horizontal">
+          <React.Fragment>
+            {this.clickedComponents()}
+            <button type="button" onClick={this.onAddClick}>เพิ่มการค้นหา</button><br/>
+          </React.Fragment>
+          <button type="submit">สร้างเลขบัตรประชาชน</button>
+          </div>
+      </form>   
     </div>
     );
   }
