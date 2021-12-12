@@ -370,14 +370,35 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
 
     return requestID;
   }
+  makeRequestFromComponent(requestItem:IdCardRequestInput):string{
+    var requestID = "";
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn1.toString()}
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn2.toString()}
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn3.toString()}
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn4.toString()}
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn5.toString()}
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn6.toString()}
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn7.toString()}
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn8.toString()}
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn9.toString()}
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn10.toString()}
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn11.toString()}
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn12.toString()}
+    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn13.toString()}
+    return requestID;
+  }
 
-   makeIDRequestMultiple():string{
+  makeIDRequestMultiple():string{
      var request = "";
+     request += '{ "idnumberlist":[';
      for(var comp in this.state.componentList){
         let inputCom = comp as unknown as IdCardRequestInput;
-        
+        request += '"'+this.makeRequestFromComponent(inputCom)+'",';
      }
-     return request;
+     request += ']}';
+     var re = /,]/gi;
+
+     return request.replace(re,"]");
    }
   makeIDLastDigitRequest(input:String):string{
     var retString = '';
