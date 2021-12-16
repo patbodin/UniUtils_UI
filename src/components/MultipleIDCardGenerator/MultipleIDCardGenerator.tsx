@@ -12,6 +12,7 @@ interface IRandomItem{
   idnumber:string;
   fullidnumber:string;
   formattedidnumber:string;
+  lastdigit:string;
 }
 
 class MultipleIDCardGenerator extends React.Component<{request:string},{loading:boolean}>{
@@ -45,7 +46,8 @@ class MultipleIDCardGenerator extends React.Component<{request:string},{loading:
            idnumber => 
               <div className="idcard-list">
                <label className="idnumber-main">เลขบัตรประชาชน {idnumber.idnumber}</label><br/>
-               <label className="idnumber-subline">{idnumber.formattedidnumber}</label>
+               <label className="idnumber-subline">{idnumber.formattedidnumber}</label><br/>
+               <label className="idnumber-subline">{idnumber.lastdigit}</label>
               </div>
           )}
       </div>
@@ -62,17 +64,33 @@ class MultipleIDCardGenerator extends React.Component<{request:string},{loading:
   componentDidMount(){
     this.getData();
   }
-  getData(): Promise<IRandomIDHeader>{
+  getData(){
     
     //Pre-Render full screen
-    let url = 'http://10.138.46.91:5099/api/idnumbers/v1/lastdigit';
-    
-    return fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.loadingAndShow(res)
-        return res as IRandomIDHeader;
-      })
+    let url = 'http://10.138.46.91:5099/api/idnumbers/v1/lastdigitlist';
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json','Accept': 'application/json','Cache-Control':'no-cache','Connection':'keep-alive'},
+      body: JSON.stringify(this.props.request)
+    };
+    fetch(url, requestOptions)
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson && await response.json();
+
+            // check for error response
+            if (!response.ok) {
+                // get error message from body or default to response status
+                const error = (data && data.message) || response.status;
+                return Promise.reject(error);
+            }
+            //this.renderResult(data as ILogin)
+            this.renderData(data as IRandomIDHeader);
+
+        })
+        .catch(error => {
+            alert(error.message);
+        });
   }
 
 

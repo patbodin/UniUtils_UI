@@ -5,6 +5,7 @@ import IDNumberGenerator from '../IDNumberGenerator/IDNumberGenerator';
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import IdCardRequestInput from '../IdCardRequestInput/IdCardRequestInput';
+import MultipleIdCardGenerator from '../MultipleIDCardGenerator/MultipleIDCardGenerator';
 
 interface IRandomIDHeader{
   result:string;
@@ -125,6 +126,12 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
   renderIDCardGenerator(){
     ReactDOM.render(
       <IDNumberGenerator request={this.makeIDRequest()}/>
+      ,document.getElementById('root'));
+  }
+
+  renderLastDigitMultiple(request : string){
+    ReactDOM.render(
+      <MultipleIdCardGenerator request={request}/>
       ,document.getElementById('root'));
   }
 
@@ -291,6 +298,13 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
     let missingLast = this.isMissingLastDigit();
     let count = this.state.idcount;
     let excludes = this.makeExclude();
+    
+    if(this.state.numComponents > 0){
+
+    }else{
+
+      var request = this.makeIDRequestMultiple();
+
 
     if(digitCount > 0){
       if(digitCount < 13){
@@ -310,6 +324,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
       alert('Select Random ID Number');
       this.renderRandomIDNumber();
     }
+  }
 
     event.preventDefault();
   }
@@ -441,6 +456,11 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
     }
     return(
       <div id="root">
+        <select name="selectList" id="selectList" className='round-border display-block center-horizontal'>
+          <option value="option 1">สุ่มเลขบัตรประชาชน</option>
+          <option value="option 2">หาเลขตัวสุดท้าย</option>
+          <option value="option 3">ตรวจสอบบัตรประชาชน</option>
+        </select>
       <form onSubmit={this.handleSubmit} >
         <div className="center-screen padding-content background-light round-border drop-shadow">
           <h1>ระบุจำนวนหมายเลขบัตรประชาชน ที่ต้องการ</h1> <br/>
