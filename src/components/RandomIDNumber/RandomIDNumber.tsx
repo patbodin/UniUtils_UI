@@ -120,7 +120,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
   renderRandomIDNumber(){
     ReactDOM.render(
       <RandomIDNumberList count={parseInt( this.state.idcount)} except={this.makeExclude()} />
-      ,document.getElementById('root'));
+      ,document.getElementById('container'));
   }
 
   renderIDCardGenerator(){
@@ -270,7 +270,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
         componentArray.push(<IdCardRequestInput />);
     }
     return componentArray;
-}
+  }
 
   validateCount (count:number):number{
     var retValue = count;
@@ -455,12 +455,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
       </div>)
     }
     return(
-      <div id="root">
-        <select name="selectList" id="selectList" className='round-border display-block center-horizontal'>
-          <option value="option 1">สุ่มเลขบัตรประชาชน</option>
-          <option value="option 2">หาเลขตัวสุดท้าย</option>
-          <option value="option 3">ตรวจสอบบัตรประชาชน</option>
-        </select>
+      <div id="container">
       <form onSubmit={this.handleSubmit} >
         <div className="center-screen padding-content background-light round-border drop-shadow">
           <h1>ระบุจำนวนหมายเลขบัตรประชาชน ที่ต้องการ</h1> <br/>
@@ -489,17 +484,7 @@ class RandomIDNumber extends React.Component<{},{idcount:string,
             <input id="exclude3" type="number" className="input-single-text round-border" value={this.state.exclude3} onChange={this.handleChange} min={0} max={9} maxLength={1}/>&nbsp;
             <input id="exclude4" type="number" className="input-single-text round-border" value={this.state.exclude4} onChange={this.handleChange} min={0} max={9} maxLength={1}/>&nbsp;
             <input id="exclude5" type="number" className="input-single-text round-border" value={this.state.exclude5} onChange={this.handleChange} min={0} max={9} maxLength={1}/>
-          </div>
-          { this.state.componentList?.map(function(component, index) 
-              {
-                  return IdCardRequestInput
-          })}
-          <div className="center-horizontal">
-          <React.Fragment>
-            {this.clickedComponents()}
-            <button type="button" onClick={this.onAddClick}>เพิ่มการค้นหา</button><br/>
-          </React.Fragment>
-          <button type="submit">สร้างเลขบัตรประชาชน</button>
+            <br/><button type="submit">สุ่มเลขบัตรประชาชน</button>
           </div>
       </form>   
     </div>

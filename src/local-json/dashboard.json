@@ -12,7 +12,7 @@
         "name":"บัตรประชาชน",
         "description":"การจัดการบัตรประชาน สร้างเลขบัตรไว้ใช้งานหรือตรวจสอบความถูกต้องต่างๆ ของบัตรประชาชน",
         "icon":"/images/icon_idcard.png",
-        "appid":"RandomIDNumber"
+        "appid":"IDCardApp"
         },
         {
             "name":"Future App",

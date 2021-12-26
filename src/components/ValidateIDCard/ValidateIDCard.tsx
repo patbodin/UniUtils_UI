@@ -1,21 +1,13 @@
 import React from 'react';
-import { threadId } from 'worker_threads';
 
 
-class IdCardRequestInput extends React.Component<{},{loading:boolean,
-  exclude1:string,exclude2:string,exclude3:string,exclude4:string,exclude5:string,
-  idn1:string,idn2:string,idn3:string,idn4:string,idn5:string,idn6:string,idn7:string,
+class ValidateIDCard extends React.Component<{},{loading:boolean,idn1:string,idn2:string,idn3:string,idn4:string,idn5:string,idn6:string,idn7:string,
   idn8:string,idn9:string,idn10:string,idn11:string,idn12:string,idn13:string}>{
-
+  
   constructor(props:any){
     super(props);
     this.state = {
       loading:true,
-      exclude1 : '',
-      exclude2 : '',
-      exclude3 : '',
-      exclude4 : '',
-      exclude5 : '',
       idn1:'',
       idn2:'',
       idn3:'',
@@ -30,10 +22,8 @@ class IdCardRequestInput extends React.Component<{},{loading:boolean,
       idn12:'',
       idn13:''
     };
-
     this.handleChange = this.handleChange.bind(this);
   }
-
   async getLayoutData(){
     /* With Timeout */
     return await setTimeout(async () => {
@@ -85,21 +75,6 @@ class IdCardRequestInput extends React.Component<{},{loading:boolean,
       case 'idn13':
         this.setState({idn13:this.validateDigits(event.target.value).toString()});
         break;
-      case 'exclude1':
-        this.setState({exclude1:this.validateDigits(event.target.value).toString()});
-        break;
-      case 'exclude2':
-        this.setState({exclude2:this.validateDigits(event.target.value).toString()});
-        break;
-      case 'exclude3':
-        this.setState({exclude3:this.validateDigits(event.target.value).toString()});
-        break;
-      case 'exclude4':
-        this.setState({exclude4:this.validateDigits(event.target.value).toString()});
-        break;
-      case 'exclude5':
-        this.setState({exclude5:this.validateDigits(event.target.value).toString()});
-        break;
       default:break;
 
     }
@@ -120,11 +95,10 @@ class IdCardRequestInput extends React.Component<{},{loading:boolean,
     if(num > 9) {retValue = 9;}
     return (retValue);
   }
-
-  render(){
+  render() {
     if(this.state.loading){
       return(
-      <div id="comp_root">
+      <div id="container">
         <div className="center-screen padding-content background-light round-border drop-shadow">        
             <div className="label-skeleton animated-background"/><br/>
             <div className="input-skeleton-single-number animated-background"/> 
@@ -142,9 +116,9 @@ class IdCardRequestInput extends React.Component<{},{loading:boolean,
             <div className="input-skeleton-single-number animated-background"/>
         </div>
       </div>);
-    }
-    return(
-      <div id="comp_root">
+      }
+      return(
+        <div id="container">
         <div className="center-screen padding-content background-light round-border drop-shadow">
             <label>รูปแบบที่ต้องการ</label><br/>
             <p className="remark">ใส่เลขบัตรประชาชนบางหลักที่ต้องการเพื่อหาเลขบัตรประชาชนตามรูปแบบที่ต้องการ
@@ -163,9 +137,9 @@ class IdCardRequestInput extends React.Component<{},{loading:boolean,
             <input id="idn12" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn12} onChange={this.handleChange}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <input id="idn13" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn13} onChange={this.handleChange}/>&nbsp;
           </div>
-    </div>
-    );
+        </div>
+      );
   }
 }
 
-export default IdCardRequestInput;
+export default ValidateIDCard;

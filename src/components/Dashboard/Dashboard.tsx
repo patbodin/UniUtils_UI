@@ -1,7 +1,7 @@
 import React from 'react';
 import dashboard from '../../local-json/dashboard.json';
-import RandomIDNumber from '../RandomIDNumber/RandomIDNumber';
 import ReactDOM from 'react-dom'
+import IDCardApp from '../IDCardApp/IDCardApp';
 
 class Dashboard extends React.Component<{},{loading:boolean}>{
   constructor(props:any){
@@ -29,9 +29,9 @@ class Dashboard extends React.Component<{},{loading:boolean}>{
   
   renderApp(appid:string){
     switch(appid){
-      case 'RandomIDNumber':
+      case 'IDCardApp':
         ReactDOM.render(
-          <RandomIDNumber/>
+          <IDCardApp/>
           ,document.getElementById('root'));
         break;
       default:break;
