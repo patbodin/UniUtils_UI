@@ -71,7 +71,7 @@ class MultipleIDCardGenerator extends React.Component<{request:string},{loading:
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json','Accept': 'application/json','Cache-Control':'no-cache','Connection':'keep-alive'},
-      body: JSON.stringify(this.props.request)
+      body: this.props.request
     };
     fetch(url, requestOptions)
         .then(async response => {
