@@ -3,7 +3,6 @@ import { threadId } from 'worker_threads';
 
 
 class IdCardRequestInput extends React.Component<{},{loading:boolean,
-  exclude1:string,exclude2:string,exclude3:string,exclude4:string,exclude5:string,
   idn1:string,idn2:string,idn3:string,idn4:string,idn5:string,idn6:string,idn7:string,
   idn8:string,idn9:string,idn10:string,idn11:string,idn12:string,idn13:string}>{
 
@@ -11,11 +10,6 @@ class IdCardRequestInput extends React.Component<{},{loading:boolean,
     super(props);
     this.state = {
       loading:true,
-      exclude1 : '',
-      exclude2 : '',
-      exclude3 : '',
-      exclude4 : '',
-      exclude5 : '',
       idn1:'',
       idn2:'',
       idn3:'',
@@ -84,21 +78,6 @@ class IdCardRequestInput extends React.Component<{},{loading:boolean,
         break;
       case 'idn13':
         this.setState({idn13:this.validateDigits(event.target.value).toString()});
-        break;
-      case 'exclude1':
-        this.setState({exclude1:this.validateDigits(event.target.value).toString()});
-        break;
-      case 'exclude2':
-        this.setState({exclude2:this.validateDigits(event.target.value).toString()});
-        break;
-      case 'exclude3':
-        this.setState({exclude3:this.validateDigits(event.target.value).toString()});
-        break;
-      case 'exclude4':
-        this.setState({exclude4:this.validateDigits(event.target.value).toString()});
-        break;
-      case 'exclude5':
-        this.setState({exclude5:this.validateDigits(event.target.value).toString()});
         break;
       default:break;
 

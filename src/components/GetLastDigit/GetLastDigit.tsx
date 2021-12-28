@@ -22,19 +22,19 @@ class GetLastDigit extends React.Component<{},{componentList?: IdCardRequestInpu
 
   makeRequestFromComponent(requestItem:IdCardRequestInput):string{
     var requestID = "";
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn1.toString()}
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn2.toString()}
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn3.toString()}
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn4.toString()}
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn5.toString()}
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn6.toString()}
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn7.toString()}
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn8.toString()}
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn9.toString()}
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn10.toString()}
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn11.toString()}
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn12.toString()}
-    if(requestItem.state.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn13.toString()}
+    if(requestItem.state.idn1.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn1.toString()}
+    if(requestItem.state.idn2.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn2.toString()}
+    if(requestItem.state.idn3.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn3.toString()}
+    if(requestItem.state.idn4.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn4.toString()}
+    if(requestItem.state.idn5.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn5.toString()}
+    if(requestItem.state.idn6.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn6.toString()}
+    if(requestItem.state.idn7.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn7.toString()}
+    if(requestItem.state.idn8.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn8.toString()}
+    if(requestItem.state.idn9.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn9.toString()}
+    if(requestItem.state.idn10.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn10.toString()}
+    if(requestItem.state.idn11.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn11.toString()}
+    if(requestItem.state.idn12.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn12.toString()}
+    if(requestItem.state.idn13.toString() == ''){ requestID += '_'; } else {requestID += requestItem.state.idn13.toString()}
     return requestID;
   }
 
@@ -48,8 +48,8 @@ class GetLastDigit extends React.Component<{},{componentList?: IdCardRequestInpu
     request += ']}';
     var re = /,]/gi;
 
-    //return request.replace(re,"]");
-    return '{"idnumberlist": ["123456789123","993456789123","123888889123"]}';
+    return request.replace(re,"]");
+    //return '{"idnumberlist": ["123456789123","993456789123","123888889123"]}';
   }
 
   handleSubmit(event:any) {
