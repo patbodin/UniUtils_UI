@@ -5,7 +5,7 @@ import Dashboard from './Dashboard';
 
 describe('<Dashboard />', () => {
   test('it should mount', () => {
-    render(<Dashboard />);
+    render(<Dashboard username=''/>);
     
     const dashboard = screen.getByTestId('Dashboard');
 

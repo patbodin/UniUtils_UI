@@ -3,7 +3,7 @@ import dashboard from '../../local-json/dashboard.json';
 import ReactDOM from 'react-dom'
 import IDCardApp from '../IDCardApp/IDCardApp';
 
-class Dashboard extends React.Component<{},{loading:boolean}>{
+class Dashboard extends React.Component<{username:String},{loading:boolean}>{
   constructor(props:any){
     super(props);
     this.state={
@@ -54,7 +54,7 @@ class Dashboard extends React.Component<{},{loading:boolean}>{
    }
    return(
     <div id="root">
-    <h1>Hi, Nathasha</h1><br/>
+    <h1>Hi, {this.props.username}</h1><br/>
     {dashboard.apps && dashboard.apps.map(({name,appid,icon})=>(
       <div id={appid} className="app-icon-container" onClick={e => this.handleClick(appid)}>
         <img src={process.env.PUBLIC_URL + icon} className="app-icon"/><br/>
