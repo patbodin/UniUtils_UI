@@ -11,7 +11,7 @@ class IDCardApp extends React.Component<{},{loading:boolean,selectedApp:string}>
   options = [
     { value: 'random', label: 'สุ่มเลขบัตรประชาชน' },
     { value: 'findlast', label: 'หาเลขตัวสุดท้าย' },
-    { value: 'genid', label: 'สร้างเลขบัตรประชาชน' },
+    //{ value: 'genid', label: 'สร้างเลขบัตรประชาชน' },
     { value: 'validate', label: 'ตรวจสอบบัตรประชาชน'}
   ];
 

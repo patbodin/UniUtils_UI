@@ -1,5 +1,9 @@
 import React from 'react';
+import { confirmAlert } from 'react-confirm-alert';
 
+interface IValidIDCard{
+  isValid:boolean
+}
 
 class ValidateIDCard extends React.Component<{},{loading:boolean,idn1:string,idn2:string,idn3:string,idn4:string,idn5:string,idn6:string,idn7:string,
   idn8:string,idn9:string,idn10:string,idn11:string,idn12:string,idn13:string}>{
@@ -23,7 +27,9 @@ class ValidateIDCard extends React.Component<{},{loading:boolean,idn1:string,idn
       idn13:''
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
+
   async getLayoutData(){
     /* With Timeout */
     return await setTimeout(async () => {
@@ -32,6 +38,63 @@ class ValidateIDCard extends React.Component<{},{loading:boolean,idn1:string,idn
   }
   componentDidMount(){
     this.getLayoutData();
+  }
+  getValidIDCard(idCardRequest:string):Promise<IValidIDCard>{
+    let url = 'http://10.138.46.91:5099/api/idnumbers/v1/isvalid/'+idCardRequest;
+    return fetch(url)
+      .then(res => res.json())
+      .then(res => {
+        this.renderValidIDNumber(this.props,res);
+        return res as IValidIDCard;
+      })
+  }
+
+  renderValidIDNumber(props:any,res:IValidIDCard){
+    let isValid = '';
+    if(res.isValid){
+      isValid = 'หมายเลขประชาชนถูกต้อง';
+    }else{
+      isValid = 'หมายเลขประชาชนไม่ถูกต้อง';
+    }
+    this.displayAlert('ตรวจสอบบัตรประชาชน',isValid);
+  }
+
+  displayAlert(topic:string, detail:string){
+    confirmAlert({
+      title: topic,
+      message: detail,
+      buttons: [
+        {
+          label: 'ปิด',
+          onClick: () => {}//alert('Click Yes')
+        }
+      ]
+    });
+  }
+
+  handleClick(event:any){
+    var resquest = this.makeIDRequest();
+    this.getValidIDCard(resquest);
+  }
+
+  makeIDRequest():string{
+    var requestID = '';
+
+    if(this.state.idn1.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn1.toString()}
+    if(this.state.idn2.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn2.toString()}
+    if(this.state.idn3.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn3.toString()}
+    if(this.state.idn4.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn4.toString()}
+    if(this.state.idn5.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn5.toString()}
+    if(this.state.idn6.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn6.toString()}
+    if(this.state.idn7.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn7.toString()}
+    if(this.state.idn8.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn8.toString()}
+    if(this.state.idn9.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn9.toString()}
+    if(this.state.idn10.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn10.toString()}
+    if(this.state.idn11.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn11.toString()}
+    if(this.state.idn12.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn12.toString()}
+    if(this.state.idn13.toString() == ''){ requestID += '_'; } else {requestID += this.state.idn13.toString()}
+
+    return requestID;
   }
 
   handleChange(event:any) {
@@ -136,7 +199,9 @@ class ValidateIDCard extends React.Component<{},{loading:boolean,idn1:string,idn
             <input id="idn11" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn11} onChange={this.handleChange}/>&nbsp;
             <input id="idn12" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn12} onChange={this.handleChange}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <input id="idn13" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn13} onChange={this.handleChange}/>&nbsp;
+            <br/><button type='button' onClick={this.handleClick}>ตรวจสอบบัตรประชาชน</button>
           </div>
+          
         </div>
       );
   }

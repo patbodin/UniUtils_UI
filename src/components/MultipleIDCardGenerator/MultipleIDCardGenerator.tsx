@@ -73,6 +73,7 @@ class MultipleIDCardGenerator extends React.Component<{request:string},{loading:
       headers: { 'Content-Type': 'application/json','Accept': 'application/json','Cache-Control':'no-cache','Connection':'keep-alive'},
       body: this.props.request
     };
+    alert(this.props.request);
     fetch(url, requestOptions)
         .then(async response => {
             const isJson = response.headers.get('content-type')?.includes('application/json');
@@ -84,12 +85,13 @@ class MultipleIDCardGenerator extends React.Component<{request:string},{loading:
                 const error = (data && data.message) || response.status;
                 return Promise.reject(error);
             }
-            //this.renderResult(data as ILogin)
-            this.renderData(data as IRandomIDHeader);
-
+            this.loadingAndShow(data as IRandomIDHeader);
+            alert(data.message as string);
+            return data as IRandomIDHeader;
         })
         .catch(error => {
             alert(error.message);
+            
         });
   }
 

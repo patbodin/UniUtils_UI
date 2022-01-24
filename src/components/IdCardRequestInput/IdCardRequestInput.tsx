@@ -24,7 +24,6 @@ class IdCardRequestInput extends React.Component<{},{loading:boolean,
       idn12:'',
       idn13:''
     };
-
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -92,6 +91,8 @@ class IdCardRequestInput extends React.Component<{},{loading:boolean,
     }
     return(retValue);
   }
+
+  
 
   validateDigits(num:number):number{
     var retValue = num
