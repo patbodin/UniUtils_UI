@@ -17,8 +17,24 @@ interface ILastDigit{
   timestamp:string
 }
 
+interface Digits{
+  digit1:string,
+  digit2:string,
+  digit3:string,
+  digit4:string,
+  digit5:string,
+  digit6:string,
+  digit7:string,
+  digit8:string,
+  digit9:string,
+  digit10:string,
+  digit11:string,
+  digit12:string,
+  digit13:string
+}
+
 class GetLastDigit extends React.Component<{},{componentList?: any[],numComponents:number,loading:boolean,idn1:string,idn2:string,idn3:string,idn4:string,idn5:string,idn6:string,idn7:string,
-  idn8:string,idn9:string,idn10:string,idn11:string,idn12:string,idn13:string}>{
+  idn8:string,idn9:string,idn10:string,idn11:string,idn12:string,idn13:string,requestDigitList:Digits[]}>{
   constructor(props:any){
     super(props);
     this.state = {
@@ -37,7 +53,8 @@ class GetLastDigit extends React.Component<{},{componentList?: any[],numComponen
       idn10:'',
       idn11:'',
       idn12:'',
-      idn13:''
+      idn13:'',
+      requestDigitList:[]
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -195,10 +212,10 @@ class GetLastDigit extends React.Component<{},{componentList?: any[],numComponen
             <input id="idn11" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn11} onChange={this.handleChange}/>&nbsp;
             <input id="idn12" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn12} onChange={this.handleChange}/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <input id="idn13" type="number" maxLength={1} className="input-single-text round-border" value={this.state.idn13} onChange={this.handleChange}/>&nbsp;
-            <br/><button type='button' onClick={this.handleSubmit}>หาเลขตัวสุดท้าย</button>
-          </div>
-          
-    </div>
+        </div>
+        <br/><button type="button" >เพิ่มการค้นหา</button>
+        <br/><button type='button' onClick={this.handleSubmit}>หาเลขตัวสุดท้าย</button>
+      </div>
     );
   }  
   }
